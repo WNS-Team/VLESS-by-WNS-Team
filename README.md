@@ -17,8 +17,8 @@ bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release
 https://github.com/XTLS/RealiTLScanner
 
 OS:
-apt install docker.io docker-compose git curl bash openssl -y
-
+apt update && apt upgrade -y
+apt install mc htop nano docker.io docker-compose git curl bash openssl -y
 git clone https://github.com/MHSanaei/3x-ui.git
 cd 3x-ui
 git checkout v2.0.2
