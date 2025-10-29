@@ -11,7 +11,8 @@ https://github.com/EvgenyNerush/easy-xray/
 curl -L https://codeload.github.com/EvgenyNerush/easy-xray/tar.gz/main | tar -xz
 
 
-
+https://github.com/XTLS/Xray-install/
+bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
 
 https://github.com/XTLS/RealiTLScanner
 
