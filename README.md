@@ -46,22 +46,56 @@ bash <(curl -sSL https://gist.githubusercontent.com/hamid-gh98/dc5dd9b0cc5b0412a
 openssl req -x509 -newkey rsa:4096 -nodes -sha256 -keyout private.key -out public.key -days 3650  && docker cp private.key 3x-ui:private.key && docker cp public.key 3x-ui:public.key
 
 
-#gui
-http://111.111.111.111:2053/
-#change login/password (default: admin/admin)
-#change port (default: 2053)
-#change start page (default: /)
+#Gui-setting:
+	#Site on http://111.111.111.111:2053/
+	#change login/password (default: admin/admin)
+	#change port (default: 2053)
+	#change start page (default: /)
 
 
-#WARP DNS:
+	#WARP DNS:
 
-#Default
-geosite:openai
+	#Default
+	geosite:openai
 
- .com.ru, .exnet.su, .net.ru, .org.ru, .pp.ru, .ru, .ru.net, .su, abkhazia.su, adygeya.ru, adygeya.su, aktyubinsk.su, arkhangelsk.su, armenia.su, ashgabad.su, azerbaijan.su, balashov.su, bashkiria.ru, bashkiria.su, bir.ru, bryansk.su, bukhara.su, cbg.ru, chimkent.su, dagestan.ru, dagestan.su, east-kazakhstan.su, georgia.su, grozny.ru, grozny.su, ivanovo.su, jambyl.su, kalmykia.ru, kalmykia.su, kaluga.su, karacol.su, karaganda.su, karelia.su, khakassia.su, krasnodar.su, kurgan.su, kustanai.ru, kustanai.su, lenug.su, mangyshlak.su, marine.ru, mordovia.ru, mordovia.su, moscow, msk.ru, msk.su, murmansk.su, mytis.ru, nalchik.ru, nalchik.su, navoi.su, north-kazakhstan.su, nov.ru, nov.su, obninsk.su, penza.su, pokrovsk.su, pyatigorsk.ru, sochi.su, spb.ru, spb.su, tashkent.su, tatar, termez.su, togliatti.su, troitsk.su, tselinograd.su, tula.su, tuva.su, vladikavkaz.ru, vladikavkaz.su, vladimir.ru, vladimir.su, vologda.su, .xn--p1ai, .xn--d1acj3b, .xn--80adxhks, .xn--80asehdb, .xn--c1avg, .xn--p1acf, .xn--p1ai, .xn--80aswg, .ua, .by, .kz, .am, .az, .ge, .kg, .md, .tj, .uz, .tm
+	 .com.ru, .exnet.su, .net.ru, .org.ru, .pp.ru, .ru, .ru.net, .su, abkhazia.su, adygeya.ru, adygeya.su, aktyubinsk.su, arkhangelsk.su, armenia.su, ashgabad.su, azerbaijan.su, balashov.su, bashkiria.ru, bashkiria.su, bir.ru, bryansk.su, bukhara.su, cbg.ru, chimkent.su, dagestan.ru, dagestan.su, east-kazakhstan.su, georgia.su, grozny.ru, grozny.su, ivanovo.su, jambyl.su, kalmykia.ru, kalmykia.su, kaluga.su, karacol.su, karaganda.su, karelia.su, khakassia.su, krasnodar.su, kurgan.su, kustanai.ru, kustanai.su, lenug.su, mangyshlak.su, marine.ru, mordovia.ru, mordovia.su, moscow, msk.ru, msk.su, murmansk.su, mytis.ru, nalchik.ru, nalchik.su, navoi.su, north-kazakhstan.su, nov.ru, nov.su, obninsk.su, penza.su, pokrovsk.su, pyatigorsk.ru, sochi.su, spb.ru, spb.su, tashkent.su, tatar, termez.su, togliatti.su, troitsk.su, tselinograd.su, tula.su, tuva.su, vladikavkaz.ru, vladikavkaz.su, vladimir.ru, vladimir.su, vologda.su, .xn--p1ai, .xn--d1acj3b, .xn--80adxhks, .xn--80asehdb, .xn--c1avg, .xn--p1acf, .xn--p1ai, .xn--80aswg, .ua, .by, .kz, .am, .az, .ge, .kg, .md, .tj, .uz, .tm
 
-#Punycode deploy:By http://github.com/aggyomfg/punycode-converter:
-punycode "1.рф" && punycode "1.дети" && punycode "1.москва" && punycode "1.онлайн" && punycode "1.орг" && punycode "1.рус" && punycode "1.рф" && punycode "1.сайт" :
-	.xn--p1ai, .xn--d1acj3b, .xn--80adxhks, .xn--80asehdb, .xn--c1avg, .xn--p1acf, .xn--p1ai, .xn--80aswg 
+	#Punycode deploy:By http://github.com/aggyomfg/punycode-converter:
+	punycode "1.рф" && punycode "1.дети" && punycode "1.москва" && punycode "1.онлайн" && punycode "1.орг" && punycode "1.рус" && punycode "1.рф" && punycode "1.сайт" :
+		.xn--p1ai, .xn--d1acj3b, .xn--80adxhks, .xn--80asehdb, .xn--c1avg, .xn--p1acf, .xn--p1ai, .xn--80aswg 
 
-#and Украина: .ua, Беларусь: .by, Казахстан: .kz, Армения: .am, Азербайджан: .az, Грузия: .ge, Кыргызстан: .kg, Молдова: .md, Таджикистан: .tj, Узбекистан: .uz, Туркменистан: .tm
+	#and Украина: .ua, Беларусь: .by, Казахстан: .kz, Армения: .am, Азербайджан: .az, Грузия: .ge, Кыргызстан: .kg, Молдова: .md, Таджикистан: .tj, Узбекистан: .uz, Туркменистан: .tm
+	
+	
+
+#Install and find dest service for HTTP/2, TLS 1.3 and X25519 :
+	cd /home/ && git clone https://github.com/XTLS/RealiTLScanner.git && cd RealiTLScanner/ && apt install golang-go -y && go build && ./RealiTLScanner -addr IP_VDS/24 -timeout 5
+#Check:
+	curl -I --tlsv1.3 --http2 https://example.com && openssl s_client -connect example.com:443 -brief  
+
+#Client Hello and Server Hello messages in cleartext. Following messages will be marked as Encrypted Handshake Messages (Example):
+	openssl s_client -connect example.com:443 -tls1_3 -msg
+	
+	<<< TLS 1.3, Handshake [length 007a], ServerHello
+	<<< TLS 1.2, RecordHeader [length 0005]
+		14 03 03 00 01
+	<<< TLS 1.2, RecordHeader [length 0005]
+		17 03 03 14 5c
+	<<< TLS 1.3, InnerContent [length 0001]
+		16
+	<<< TLS 1.3, Handshake [length 0006], EncryptedExtensions 
+		08 00 00 02 00 00
+	#"Encrypted Extensions" are the most important thing we need to find.
+
+#The command output should match the initial IP:
+	curl -v example.com 2>&1 | grep  Location
+
+#More info (optional):
+	cd /home/ && git clone https://github.com/drwetter/testssl.sh.git && cd testssl.sh && ./testssl.sh https://example.com/ (or apt install testssl.sh)
+
+
+bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install  && systemctl disable xray && service xray stop
+
+
+
+xray tls ping cloudflare.com
