@@ -29,6 +29,23 @@ apt-get install fail2ban - setting IP-spam
 
 
 #OS:
+nano /etc/ssh/sshd_config
+ufw allow <new_port>/tcp && ufw enable
+ufw status numbered
+ufw delete [rule_number]
+
+sudo nano /etc/sysctl.conf
+#Add:
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1
+#Save
+sudo sysctl -p
+
+
+
+
+
 apt update && apt upgrade -y && reboot
 apt install docker.io docker-compose git curl bash openssl libghc-wai-app-static-dev -y
 apt install mc htop nano -y # optional
@@ -38,6 +55,10 @@ cd /home/ && git clone https://github.com/MHSanaei/3x-ui.git && cd 3x-ui && git 
 bash <(curl -sSL https://gist.githubusercontent.com/hamid-gh98/dc5dd9b0cc5b0412af927b1ccdb294c7/raw/install_warp_proxy.sh) -y
 
 openssl req -x509 -newkey rsa:4096 -nodes -sha256 -keyout private.key -out public.key -days 3650  && docker cp private.key 3x-ui:private.key && docker cp public.key 3x-ui:public.key
+
+#Connect:
+ssh -L <LocalPort>:localhost:<port-3x> user@your_server_ip
+
 
 
 #Gui-setting:
@@ -59,16 +80,26 @@ openssl req -x509 -newkey rsa:4096 -nodes -sha256 -keyout private.key -out publi
 	
 
 #Install and find dest service for HTTP/2, TLS 1.3 and X25519 :
-	cd /home/ && git clone https://github.com/XTLS/RealiTLScanner.git && cd RealiTLScanner/ && apt install golang-go -y && go build && ./RealiTLScanner -addr IP_VDS(short).0.0/16 -timeout 5 -thread 10
+	cd /home/ && git clone https://github.com/XTLS/RealiTLScanner.git && cd RealiTLScanner/ && apt install golang-go -y && go build && ./RealiTLScanner -addr IP_VDS -timeout 5 -thread 10 -out string.csv
 #Check:
-	curl -vI --tlsv1.3 --http2 https://example.com 2>&1 | grep -E "using HTTP/2|SSL connection using TLSv1.3|X25519"
+	curl -vI --tlsv1.3 --http2 https://example.com 2>&1 | grep -E "ALPN: server accepted h2|SSL connection using TLSv1.3|X25519"
 	#or
-	openssl s_client -connect example.com:443 -alpn h2,http/1.1 2>&1 | grep -E "ALPN protocol: h2|New, TLSv1.3|Server Temp Key: X25519"
+	openssl s_client -connect example.com:443 -alpn h2,http/1.1 2>&1 | grep -E "ALPN: server accepted h2|New, TLSv1.3|Server Temp Key: X25519"
 	#or
-	xray tls ping google.com | grep -E 'TLS Version:.*TLS 1.3|TLS Post-Quantum key exchange:.*true \(X25519*' | sort -u  #!Without checking the HTTP protocol version
+	xray tls ping google.com | grep -E 'TLS Version:.*TLS 1.3|TLS Post-Quantum key exchange:.*true \(X25519*' | sort -u  #!Without checking the HTTP protocol version	
 	
-!!! #This can improve performance and privacy of the connection (optional):
-	openssl s_client -connect www.google.com:443 -status | grep "OCSP Response Status: successful"	
+	curl -vI --tlsv1.3 --http2 https://96.126.114.55 2>&1 | grep -E "ALPN: server accepted h2|SSL connection using TLSv1.3|X25519"
+
+
+	#Location:
+	curl -v example.com 2>&1 | grep  Location
+	#or
+	curl -v IP 2>&1 | grep  Location
+	
+	
+	#time
+	https://github.com/speedtestdemon/speed-tests
+	curl -L -w "@curl-format.txt" -o tmp -s example.com
 
 #Client Hello and Server Hello messages in cleartext. Following messages will be marked as Encrypted Handshake Messages (Example/Optional):
 	openssl s_client -connect example.com:443 -tls1_3 -msg
@@ -84,12 +115,23 @@ openssl req -x509 -newkey rsa:4096 -nodes -sha256 -keyout private.key -out publi
 	#"Encrypted Extensions" are the most important thing we need to find.
 
 
-!!! #The command output should match the initial IP (optional):
-	curl -v example.com 2>&1 | grep  Location
+
+	
+!!! #This can improve performance and privacy of the connection (optional):
+	openssl s_client -connect www.google.com:443 -status | grep "OCSP Response Status: successful"	
 	#or
-	curl -v IP 2>&1 | grep  Location
+	openssl s_client -connect www.google.com:443 -status | grep "OCSP response: no response sent"
+
 	
 !!! #RSA-sert > 3500+ byte (optional):	
+
+
+
+nodash.org or 188.114.97.3
+	curl -vI --tlsv1.3 --http2 https://nodash.org 2>&1 | grep -E "ALPN: server accepted h2|SSL connection using TLSv1.3|X25519"
+	curl -v nodash.org 2>&1 | grep  Location
+	curl -L -w "@curl-format.txt" -o tmp -s nodash.org
+	openssl s_client -connect nodash.org:443 -tls1_3 -msg
 
 
 #More info (optional):
