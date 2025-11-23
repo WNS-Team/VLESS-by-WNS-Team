@@ -18,9 +18,13 @@ https://github.com/XTLS/Xray-core/ #orig
 https://github.com/XTLS/Xray-core/discussions/3518
 
 
-#gui
+#gui +
 https://github.com/MHSanaei/3x-ui
-bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)			 	
+bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh):
+19 - SSL
+ 	
+
+
 
 #scan
 https://github.com/XTLS/RealiTLScanner 
@@ -30,7 +34,10 @@ apt-get install fail2ban - setting IP-spam
 
 #OS:
 nano /etc/ssh/sshd_config
-ufw allow <new_port>/tcp && ufw enable
+ufw allow <new_port_xray>/tcp && ufw enable
+ufw allow <port_for_gRPC>/tcp && ufw enable
+ufw allow 443/tcp && ufw enable
+
 ufw status numbered
 ufw delete [rule_number]
 
@@ -52,9 +59,23 @@ apt install mc htop nano -y # optional
 cd /home/ && git clone https://github.com/MHSanaei/3x-ui.git && cd 3x-ui && git checkout v2.0.2 && docker-compose up -d
 
 #WARP install (optional):
-bash <(curl -sSL https://gist.githubusercontent.com/hamid-gh98/dc5dd9b0cc5b0412af927b1ccdb294c7/raw/install_warp_proxy.sh) -y
+#wget -N https://gitlab.com/fscarmen/warp/-/raw/main/menu.sh && bash menu.sh
+
+#Add cloudflare gpg key
+curl -fsSL https://pkg.cloudflareclient.com/pubkey.gpg | sudo gpg --yes --dearmor --output /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg
+
+#Add this repo to your apt repositories
+echo "deb [signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
+
+#Install
+sudo apt-get update && sudo apt-get install cloudflare-warp
+
+#Settings
+warp-cli registration new && warp-cli mode proxy && warp-cli connect
 
 openssl req -x509 -newkey rsa:4096 -nodes -sha256 -keyout private.key -out public.key -days 3650  && docker cp private.key 3x-ui:private.key && docker cp public.key 3x-ui:public.key
+openssl req -new -newkey rsa:2048 -nodes -keyout your_private_key.key -out your_domain.csr
+
 
 #Connect:
 ssh -L <LocalPort>:localhost:<port-3x> user@your_server_ip
@@ -125,6 +146,19 @@ ssh -L <LocalPort>:localhost:<port-3x> user@your_server_ip
 	
 !!! #RSA-sert > 3500+ byte (optional):	
 
+#Fail2Ban!!!???
+#BBR!!!!????
+
+#NGINX:
+
+openssl req -x509 -newkey rsa:4096 -nodes -sha256 -keyout /etc/ssl/private/ssl-cert-snakeoil.key -out /etc/ssl/certs/ssl-cert-snakeoil.pem -days 3650 -subj "/CN=YOUR_DOMAIN_GOES HERE"
+openssl req -out CSR.csr -new -newkey rsa:4096 -keyout privatekey.key
+
+#Masking(persistent, т. е. запихнуть в rc.local, сервис systemd или куда‑нибудь ещё.):
+iptables -t nat -A PREROUTING -i eth0 -p udp --dport 443 -j DNAT --to-destination <IP>:443
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination <IP>:80
+
+curl -X PATCH "https://api.cloudflare.com/client/v4/zones/ID_ZONE/settings/ech" -H "X-Auth-Key: YOUR_GLOBAL_API_KEY" -H "X-Auth-Email: YOUR_EMAIL" -H "Content-Type: application/json" --data '{"id":"ech","value":"off"}'
 
 
 nodash.org or 188.114.97.3
@@ -141,4 +175,7 @@ nodash.org or 188.114.97.3
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install  && systemctl disable xray && service xray stop
 
 
+openssl rand -hex 8
 
+
+curl ifconfig.me
